@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "distributions",
+    "rootDir": "."
+  },
+  "include": ["entrypoint.ts", "commands/**/*"],
+  "exclude": ["node_modules", "distributions"],
+  "references": [
+    { "path": "../core" }
+  ]
+}
