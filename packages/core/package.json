@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
+    "./inferences/*.js": {
+      "types": "./distributions/inferences/*.d.ts",
+      "default": "./distributions/inferences/*.js"
+    },
     "./models/*.js": {
       "types": "./distributions/models/*.d.ts",
       "default": "./distributions/models/*.js"

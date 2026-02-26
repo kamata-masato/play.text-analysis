@@ -4,6 +4,6 @@
     "outDir": "distributions",
     "rootDir": "."
   },
-  "include": ["models/**/*", "pipes/**/*", "pipelines/**/*"],
+  "include": ["inferences/**/*", "models/**/*", "pipes/**/*", "pipelines/**/*"],
   "exclude": ["node_modules", "tests", "distributions"]
 }

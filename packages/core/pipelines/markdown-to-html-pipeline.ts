@@ -11,10 +11,10 @@ import { MarkdownParser } from '../pipes/parsers/markdown-parser.js'
 import { HtmlPublisher } from '../pipes/publishers/html-publisher.js'
 import { MarkdownTranscriber } from '../pipes/publishers/transcribers/markdown-transcriber.js'
 import { WeightScorer } from '../pipes/scorers/weight-scorer.js'
-import { Pipeline } from './pipeline.js'
+import { type Monitor, Pipeline } from './pipeline.js'
 
 class MarkdownToHtmlPipeline extends Pipeline {
-  constructor() {
+  constructor(monitor?: Monitor) {
     super(
       new MarkdownParser(),
       {
@@ -29,6 +29,7 @@ class MarkdownToHtmlPipeline extends Pipeline {
       new NameBundler(),
       new WeightScorer(),
       new HtmlPublisher(new MarkdownTranscriber()),
+      monitor,
     )
   }
 }

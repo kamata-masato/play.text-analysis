@@ -9,6 +9,8 @@ import type { Parser } from '../pipes/parsers/parser.js'
 import type { Publisher } from '../pipes/publishers/publisher.js'
 import type { Scorer } from '../pipes/scorers/scorer.js'
 
+type Monitor = (message: string) => void
+
 abstract class Pipeline {
   constructor(
     private parser: Parser,
@@ -16,12 +18,16 @@ abstract class Pipeline {
     private bundler: Bundler,
     private scorer: Scorer,
     private publisher: Publisher,
+    private monitor: Monitor = () => {},
   ) {}
 
   run = async (sources: string[], destination: string): Promise<void> => {
     const notebooks: Notebook[] = []
     for (const source of sources) {
       const files = await this.explore(source)
+
+      this.monitor(`Parsing ${files.length} files...`)
+
       for (const file of files) {
         const content = await readFile(join(source, file), 'utf-8')
         notebooks.push(this.parser.parse(file, content))
@@ -39,8 +45,16 @@ abstract class Pipeline {
       }
     }
 
+    this.monitor(`Found ${evidences.length} evidences`)
+
     const prospects = this.bundler.bundle(evidences)
-    const concepts = this.scorer.score(prospects)
+    this.monitor(`Bundled into ${prospects.length} prospects`)
+
+    this.monitor(`Scoring ${prospects.length} prospects...`)
+    const concepts = await this.scorer.score(prospects, this.monitor)
+    this.monitor(`Accepted ${concepts.length} concepts`)
+
+    this.monitor('Publishing...')
     await this.publisher.publish(notebooks, concepts, destination)
   }
 
@@ -54,3 +68,4 @@ abstract class Pipeline {
 }
 
 export { Pipeline }
+export type { Monitor }
