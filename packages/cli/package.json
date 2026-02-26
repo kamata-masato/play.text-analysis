@@ -1,0 +1,22 @@
+{
+  "name": "@glossa/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "glossa": "distributions/entrypoint.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:verify": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@glossa/core": "workspace:*",
+    "commander": "^14.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2"
+  }
+}

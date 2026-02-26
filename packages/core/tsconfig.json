@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "distributions",
+    "rootDir": "."
+  },
+  "include": ["models/**/*", "pipes/**/*", "pipelines/**/*"],
+  "exclude": ["node_modules", "tests", "distributions"]
+}

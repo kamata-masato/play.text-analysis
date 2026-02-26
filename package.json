@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "pnpm --recursive run build",
+    "build:verify": "pnpm --recursive run build:verify",
+    "test": "pnpm --filter @glossa/core run test",
+    "test:watch": "pnpm --filter @glossa/core run test:watch",
+    "style": "biome check --write .",
+    "style:format": "biome format --write .",
+    "style:lint": "biome lint ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.4",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
