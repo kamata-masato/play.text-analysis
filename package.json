@@ -1,0 +1,30 @@
+{
+  "name": "glossa",
+  "version": "0.1.0",
+  "description": "Detect defined concepts across documents and generate annotated output with hover explanations",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:verify": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "style": "biome check --write .",
+    "style:format": "biome format --write .",
+    "style:lint": "biome lint ."
+  },
+  "dependencies": {
+    "remark-gfm": "^4.0.0",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.4",
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.0"
+  }
+}
