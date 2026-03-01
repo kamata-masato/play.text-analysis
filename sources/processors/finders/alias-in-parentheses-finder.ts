@@ -30,7 +30,7 @@ class AliasInParenthesesFinder implements Finder {
       const inside = matched.inside.trim()
 
       /**
-       * 略称展開の場合は略称側を name、正式名称側を description とする
+       * 略称展開の場合は略称側を用語名、正式名称側を説明文とする
        */
       if (ABBREVIATION.test(outside)) {
         hints.push({
@@ -48,7 +48,7 @@ class AliasInParenthesesFinder implements Finder {
         })
       } else {
         /**
-         * 日英ペアの場合は日本語側を name、英語側を description とする
+         * 日英ペアの場合は日本語側を用語名、英語側を説明文とする
          */
         hints.push({
           name: matched.outside,

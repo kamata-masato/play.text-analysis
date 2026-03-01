@@ -8,24 +8,24 @@ import type { Parser } from '../parser.js'
 /**
  * mdast の走査中に蓄積する可変状態
  *
- * 1パスで text, origins, emphases を同時に組み立てるために使用する
+ * 1パスでプレーンテキスト、行番号対応表、強調マークを同時に組み立てるために使用する
  */
 type TraversalState = {
   /**
-   * text の断片を蓄積するバッファ
+   * プレーンテキストの断片を蓄積するバッファ
    *
-   * 走査完了後に join('') で note.text を生成する
+   * 走査完了後に結合してプレーンテキストを生成する
    */
   buffer: string[]
   /**
    * 現在の文字オフセット
    *
    * バッファの合計長に等しい
-   * Emphasis の span.offset と Origin の offset の計算に使用する
+   * Emphasis の出現位置と Origin のオフセットの計算に使用する
    */
   offset: number
   /**
-   * note.text のオフセットとソースファイル行番号の対応表
+   * プレーンテキストのオフセットとソースファイル行番号の対応表
    *
    * テキスト追加時に、直前と異なる行番号であれば新しいエントリを追加する
    */
@@ -33,7 +33,7 @@ type TraversalState = {
   /**
    * 検出した太字の一覧
    *
-   * strong ノードの走査時に span.offset を記録して生成する
+   * 太字ノードの走査時に出現位置を記録して生成する
    */
   emphases: Emphasis[]
 }
@@ -85,9 +85,9 @@ class MarkdownParser implements Parser {
   /**
    * Markdown ファイルを解析して Notebook を生成する
    *
-   * 空ファイルの場合は notes が空の Notebook を返す
-   * content をそのまま raw に格納する
-   * note.text はプレーンテキストであり成果物の変換には使えないため、Publisher が成果物を生成する際に raw を使用する
+   * 空ファイルの場合はノート一覧が空の Notebook を返す
+   * 入力文字列を元テキストとして格納する
+   * プレーンテキストは構造を失っているため、Publisher が成果物を生成する際に元テキストを使用する
    *
    * @param source - ファイルパスを指定する
    * @param content - ファイルの中身の文字列を指定する
@@ -149,8 +149,8 @@ class MarkdownParser implements Parser {
   /**
    * RawNote の配列から Note の配列を生成する
    *
-   * 祖先見出しのスタックを管理し、各ノートに見出し情報を設定する
-   * 各ノートのコンテンツを走査して text, origins, emphases を組み立てる
+   * 祖先見出しのスタックを管理し、各ノートに見出しを設定する
+   * 各ノートのコンテンツを走査してプレーンテキスト、行番号対応表、強調マークを組み立てる
    *
    * @param source - ファイルパスを指定する
    * @param fragments - 見出し分割で生成した RawNote の配列を指定する
@@ -195,7 +195,7 @@ class MarkdownParser implements Parser {
       }
 
       /**
-       * 冒頭ノートには見出し情報を設定しない
+       * 冒頭ノートには見出しを設定しない
        * exactOptionalPropertyTypes により undefined の明示的代入はできないため、条件付きでプロパティを追加する
        */
       if (fragment.heading !== null) {
@@ -207,7 +207,7 @@ class MarkdownParser implements Parser {
       }
 
       /**
-       * strong が存在しない場合は emphases を設定しない
+       * 太字が存在しない場合は強調マークを設定しない
        */
       if (state.emphases.length > 0) {
         note.emphases = state.emphases
@@ -223,7 +223,7 @@ class MarkdownParser implements Parser {
    * mdast ノードの子を走査してテキストのみ結合する
    *
    * 見出しのテキスト抽出専用である
-   * note.text の組み立てには別の走査メソッドを使用する
+   * プレーンテキストの組み立てには別の走査メソッドを使用する
    *
    * @param children - 見出しノードの children を指定する
    * @returns 結合したテキストを返す
@@ -243,9 +243,9 @@ class MarkdownParser implements Parser {
   }
 
   /**
-   * ノード種別ごとに処理を振り分け、text, origins, emphases を組み立てる
+   * ノード種別ごとに処理を振り分け、プレーンテキスト、行番号対応表、強調マークを組み立てる
    *
-   * ネストフラグにより strong の入れ子を検出し、外側の strong のみ Emphasis として記録する
+   * ネストフラグにより太字の入れ子を検出し、外側の太字のみ Emphasis として記録する
    *
    * @param node - 処理対象の mdast ノードを指定する
    * @param state - 走査中の可変状態を指定する
@@ -334,7 +334,7 @@ class MarkdownParser implements Parser {
       /**
        * 太字を処理する
        * 外側の strong のみ Emphasis として記録する
-       * ネストした strong を個別に記録すると offset 範囲が重複し、Finder の走査に影響するため外側のみとする
+       * ネストした太字を個別に記録するとオフセット範囲が重複し、Finder の走査に影響するため外側のみとする
        */
       case 'strong': {
         if (!nested) {
@@ -344,7 +344,7 @@ class MarkdownParser implements Parser {
             this.visit(child as RootContent, state, true)
           }
           /**
-           * バッファの追加分を結合して span.text を生成する
+           * バッファの追加分を結合してマッチテキストを生成する
            */
           const captured = state.buffer.slice(mark).join('')
           state.emphases.push({
@@ -353,7 +353,7 @@ class MarkdownParser implements Parser {
           })
         } else {
           /**
-           * ネストした strong はテキストだけ処理し、Emphasis は生成しない
+           * ネストした太字はテキストだけ処理し、Emphasis は生成しない
            */
           for (const child of node.children) {
             this.visit(child as RootContent, state, true)
@@ -365,7 +365,7 @@ class MarkdownParser implements Parser {
       /**
        * イタリックを処理する
        * テキストだけ処理し、Emphasis は生成しない
-       * 現在 EmphasisKind は 'strong' のみである
+       * 現在の強調種別は太字のみである
        */
       case 'emphasis': {
         for (const child of node.children) {
@@ -376,7 +376,7 @@ class MarkdownParser implements Parser {
 
       /**
        * 取り消し線を処理する
-       * テキストだけ処理し、構造情報は捨てる
+       * テキストだけ処理し、構造は捨てる
        */
       case 'delete': {
         for (const child of node.children) {
@@ -440,7 +440,7 @@ class MarkdownParser implements Parser {
    * テーブルのセル内容を処理する
    *
    * セル間をスペース、行間を改行で区切ってバッファに追加する
-   * テキスト依存ルールが text を走査できるようにする
+   * テキスト依存ルールがプレーンテキストを走査できるようにする
    *
    * @param node - テーブルノードを指定する
    * @param state - 走査中の可変状態を指定する

@@ -2,11 +2,10 @@ import { describe, expect, it } from 'vitest'
 import type { Note } from '../../../sources/models/note.js'
 import BoldTextFinder from '../../../sources/processors/finders/bold-text-finder.js'
 
-const finder = new BoldTextFinder()
-
 describe('BoldTextFinder', () => {
   describe('find', () => {
     it('strong の Emphasis から Hint を返す', () => {
+      const finder = new BoldTextFinder()
       const note: Note = {
         source: 'inline.md',
         text: 'コアダンプとは、プロセスが...',
@@ -22,6 +21,7 @@ describe('BoldTextFinder', () => {
     })
 
     it('emphases が undefined の場合は空配列を返す', () => {
+      const finder = new BoldTextFinder()
       const note: Note = {
         source: 'inline.md',
         text: 'テキストのみ',
@@ -31,6 +31,7 @@ describe('BoldTextFinder', () => {
     })
 
     it('空白のみの太字をスキップする', () => {
+      const finder = new BoldTextFinder()
       const note: Note = {
         source: 'inline.md',
         text: '  テキスト',
@@ -41,6 +42,7 @@ describe('BoldTextFinder', () => {
     })
 
     it('複数の strong から複数の Hint を返す', () => {
+      const finder = new BoldTextFinder()
       const note: Note = {
         source: 'inline.md',
         text: 'プロセスとスレッドの違い',
@@ -56,7 +58,36 @@ describe('BoldTextFinder', () => {
       expect(hints[1]?.name).toBe('スレッド')
     })
 
+    it('複数 Origin で後半の Emphasis の line を正しく解決する', () => {
+      const finder = new BoldTextFinder()
+      const note: Note = {
+        source: 'inline.md',
+        text: '前半のテキストと後半のスレッド',
+        origins: [
+          { offset: 0, line: 3 },
+          { offset: 8, line: 10 },
+        ],
+        emphases: [{ span: { text: 'スレッド', offset: 11 }, kind: 'strong' }],
+      }
+      const hints = finder.find(note)
+      expect(hints).toHaveLength(1)
+      expect(hints[0]?.name).toBe('スレッド')
+      expect(hints[0]?.line).toBe(10)
+    })
+
+    it('emphases が空配列の場合は空配列を返す', () => {
+      const finder = new BoldTextFinder()
+      const note: Note = {
+        source: 'inline.md',
+        text: 'テキストのみ',
+        origins: [{ offset: 0, line: 1 }],
+        emphases: [],
+      }
+      expect(finder.find(note)).toHaveLength(0)
+    })
+
     it('description を設定しない', () => {
+      const finder = new BoldTextFinder()
       const note: Note = {
         source: 'inline.md',
         text: 'コアダンプとは...',

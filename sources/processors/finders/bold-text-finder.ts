@@ -6,13 +6,13 @@ import resolve from './supports/line.js'
 /**
  * 太字テキストから用語候補を検出する Finder
  *
- * Note の emphases から kind が 'strong' の太字を Hint として返す
+ * Note 内の太字を Hint として返す
  */
 class BoldTextFinder implements Finder {
   /**
-   * Note の emphases を走査して太字テキストの Hint を返す
+   * Note の太字を走査して Hint を返す
    *
-   * emphases が undefined の場合は空配列を返す
+   * 太字がない場合は空配列を返す
    * 空白のみの太字はスキップする
    *
    * @param note - 走査対象のノートを指定する

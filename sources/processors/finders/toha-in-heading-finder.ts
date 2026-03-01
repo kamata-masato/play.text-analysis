@@ -3,21 +3,21 @@ import type { Note } from '../../models/note.js'
 import type { Finder } from '../finder.js'
 
 /**
- * 見出しの「Xとは」パターンから用語候補を検出する
+ * 見出しの「Xとは」パターンを検出する正規表現
  */
 const PATTERN = /^(?<name>.+?)とは[?？]?$/
 
 /**
  * 見出しに「Xとは」を含むノートから用語候補を検出する Finder
  *
- * Note の headings の末尾の見出しを参照し、「Xとは」パターンにマッチすれば Hint を返す
- * 本文テキストを description として付与する
+ * Note の末尾の見出しを参照し、「Xとは」パターンにマッチすれば Hint を返す
+ * 本文テキストを説明文として付与する
  */
 class TohaInHeadingFinder implements Finder {
   /**
    * Note の末尾の見出しを走査して「Xとは」パターンの Hint を返す
    *
-   * headings が undefined の場合は空配列を返す
+   * 見出しがない場合は空配列を返す
    * 末尾の見出しのみを対象とする
    *
    * @param note - 走査対象のノートを指定する

@@ -4,17 +4,18 @@ import type { Finder } from '../finder.js'
 import resolve from './supports/line.js'
 
 /**
- * 文末表現の一覧
+ * パターン1の文末判定に使用する文末表現の一覧
  *
+ * パターン2は読点トリガーで文末を判定するため、このリストは使用しない
  * 長い表現を先に列挙することで正規表現の最長一致を実現する
  */
 const ENDINGS =
   'のことである|のことです|のこと|を意味します|を意味する|を指します|を指す|の略称です|の略称|の略です|の略|である|です'
 
 /**
- * パターン1: 文末列挙型
+ * 文末列挙型
  *
- * 「Xとは[、]?Y」の形式で Y が特定の文末表現で終わるパターンを検出する
+ * 「Xとは<comma?>Y」の形式で Y が特定の文末表現で終わるパターンを検出する
  */
 const PATTERN_ONE = new RegExp(
   `(?:^|[\n。、])(?<name>[^\n。、]+?)とは[、]?(?<description>[^\n。]*?(?:${ENDINGS}))`,
@@ -22,14 +23,14 @@ const PATTERN_ONE = new RegExp(
 )
 
 /**
- * パターン2: 読点トリガー型
+ * 読点トリガー型
  *
  * 「Xとは、Y」の形式で Y が句点・改行・末尾まで続くパターンを検出する
  */
 const PATTERN_TWO = /(?:^|[\n。、])(?<name>[^\n。、]+?)とは、(?<description>[^。\n]+)/g
 
 /**
- * 本文の「Xとは〜です」パターンから用語候補を検出する Finder
+ * 本文の「XとはY」パターンから用語候補を検出する Finder
  *
  * 文末列挙型と読点トリガー型の2パターンで検出する
  * 重複時はパターン1を優先する
@@ -48,7 +49,7 @@ class TohaInBodyFinder implements Finder {
     const secondary = this.scan(note, PATTERN_TWO)
 
     /**
-     * パターン1の span.offset を集合に格納し、重複判定に使用する
+     * パターン1のマッチ位置を集合に格納し、重複判定に使用する
      */
     const covered = new Set(primary.map((hint) => hint.span!.offset))
 
@@ -65,7 +66,7 @@ class TohaInBodyFinder implements Finder {
   /**
    * 指定した正規表現でテキストを走査し Hint の配列を返す
    *
-   * マッチの先頭が区切り文字の場合はスキップして name と offset を調整する
+   * マッチの先頭が区切り文字の場合はスキップして用語名とオフセットを調整する
    *
    * @param note - 走査対象のノートを指定する
    * @param source - 走査に使用する正規表現を指定する

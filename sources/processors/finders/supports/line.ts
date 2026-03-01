@@ -1,12 +1,13 @@
 import type { Note } from '../../../models/note.js'
 
 /**
- * note.text のオフセットからソースファイルの行番号を解決する
+ * プレーンテキスト内のオフセットからソースファイルの行番号を解決する
  *
- * note.origins を二分探索し、offset 以下で最大の Origin を見つけて line を返す
+ * Origin 一覧を二分探索し、オフセット以下で最大のエントリの行番号を返す
+ * origins が1件以上含まれていることを前提とする
  *
  * @param note - 対象のノートを指定する
- * @param offset - note.text 内の文字オフセットを指定する
+ * @param offset - プレーンテキスト内の文字オフセットを指定する
  * @returns ソースファイルの行番号を返す
  */
 const resolve = (note: Note, offset: number): number => {

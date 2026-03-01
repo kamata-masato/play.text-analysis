@@ -14,14 +14,13 @@ type Hint = {
    * 説明文
    *
    * Finder が説明文を取得できた場合に設定する
-   * Scorer が description の選定に使用する
+   * Scorer が最適な説明文の選定に使用する
    */
   description?: string
   /**
    * ノート内での出現位置
    *
-   * note.text 内にマッチ位置がある Finder が設定する
-   * デバッグでのマッチ検証に不可欠である
+   * プレーンテキスト内にマッチ位置がある Finder が設定する
    */
   span?: Span
   /**

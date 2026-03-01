@@ -6,7 +6,7 @@ import type { Bundler } from '../bundler.js'
  * 用語名の正規化キーで Evidence をグルーピングする Bundler
  *
  * 正規化はグルーピングキーの生成にのみ使用し、出力の用語名には反映しない
- * 先頭助詞の除去はグルーピングキーと Prospect.name の両方に適用する
+ * 先頭助詞の除去はグルーピングキーと用語名の両方に適用する
  */
 class NameBundler implements Bundler {
   /**
@@ -51,11 +51,17 @@ class NameBundler implements Bundler {
   private normalize = (name: string): string => {
     let result = name.trim()
     result = this.strip(result)
-    /** 全角英数字 → 半角英数字 */
+    /**
+     * 全角英数字を半角英数字に変換する
+     * 「ＨＴＴＰ」と「HTTP」を同一用語としてグルーピングする
+     */
     result = result.replace(/[Ａ-Ｚａ-ｚ０-９]/g, (character) =>
       String.fromCharCode(character.charCodeAt(0) - 0xfee0),
     )
-    /** 全角スペース → 半角スペース */
+    /**
+     * 全角スペースを半角スペースに変換する
+     * 「shared　memory」と「shared memory」を同一用語としてグルーピングする
+     */
     result = result.replace(/\u3000/g, ' ')
     result = result.toLowerCase()
     return result

@@ -8,7 +8,7 @@ import { aliased, detect } from './supports/parentheses.js'
  * 括弧内の日本語補足から用語候補を検出する Finder
  *
  * 括弧の外も中も日本語で、日英ペアでも略称展開でもないものを検出する
- * alias-in-parentheses の条件に合致しなかったものが対象となる
+ * 日英ペアにも略称展開にも該当しない括弧パターンが対象となる
  */
 class JapaneseSupplementInParenthesesFinder implements Finder {
   /**

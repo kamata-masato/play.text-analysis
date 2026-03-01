@@ -14,9 +14,9 @@ const BuiltinRules = {
 } as const
 
 /**
- * ルール名
+ * ルール
  *
- * BuiltinRules の値のユニオン型である
+ * 各 Finder が どのように Hint を見つけるかを定義する識別子
  */
 type Rule = (typeof BuiltinRules)[keyof typeof BuiltinRules]
 

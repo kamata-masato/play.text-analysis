@@ -23,7 +23,7 @@ type ParenthesisMatch = {
 /**
  * 括弧パターンを検出する正規表現
  *
- * outside の左端には改行・句点・読点と括弧文字を区切りとして使用する
+ * 括弧の外側テキストの左端には改行・句点・読点と括弧文字を区切りとして使用する
  */
 const PATTERN = /(?<outside>[^(\n。、（）()]+?)[（(](?<inside>[^）)]+)[）)]/g
 
@@ -68,13 +68,14 @@ const detect = (text: string): ParenthesisMatch[] => {
 }
 
 /**
- * 日英ペアかどうかを判定する
+ * 日英ペアまたは略称展開かどうかを判定する
  *
- * outside が日本語を含み、inside が英語のみの場合に真を返す
+ * 日本語の外側に英語の内側が対応する日英ペアを検出する
+ * 略称と正式名称の長さの差による略称展開も検出する
  *
  * @param outside - 括弧の外側テキストを指定する
  * @param inside - 括弧の内側テキストを指定する
- * @returns 日英ペアの場合は true を返す
+ * @returns 日英ペアまたは略称展開の場合は true を返す
  */
 const aliased = (outside: string, inside: string): boolean => {
   if (JAPANESE.test(outside) && !JAPANESE.test(inside) && /[A-Za-z]/.test(inside)) {

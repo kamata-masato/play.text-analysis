@@ -9,7 +9,7 @@ type Prospect = {
   /**
    * 用語テキスト
    *
-   * Bundler が最初の Evidence の用語名を trim して設定する
+   * Bundler が最初の Evidence の用語名から空白を除去して設定する
    */
   name: string
   /**
@@ -35,7 +35,8 @@ type Concept = {
   /**
    * スコア
    *
-   * デバッグ分析やレビュー用途で参照する
+   * Scorer がこの概念の妥当性を表す数値を設定する
+   * 閾値を超えた Prospect から生成するため、常に正の数になる
    */
   score: number
   /**

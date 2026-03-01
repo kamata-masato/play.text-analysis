@@ -2,11 +2,10 @@ import { describe, expect, it } from 'vitest'
 import type { Note } from '../../../sources/models/note.js'
 import AliasInParenthesesFinder from '../../../sources/processors/finders/alias-in-parentheses-finder.js'
 
-const finder = new AliasInParenthesesFinder()
-
 describe('AliasInParenthesesFinder', () => {
   describe('find - 日英ペア', () => {
     it('日本語（English）の形式から Hint を返す', () => {
+      const finder = new AliasInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: '認証（Authentication）はユーザーの身元を確認するプロセスです',
@@ -19,6 +18,7 @@ describe('AliasInParenthesesFinder', () => {
     })
 
     it('半角括弧でもマッチする', () => {
+      const finder = new AliasInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: '共有メモリ(shared memory)を使って通信する',
@@ -31,6 +31,7 @@ describe('AliasInParenthesesFinder', () => {
     })
 
     it('span と line を正しく設定する', () => {
+      const finder = new AliasInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: '認証（Authentication）は重要です',
@@ -46,6 +47,7 @@ describe('AliasInParenthesesFinder', () => {
 
   describe('find - 略称展開', () => {
     it('略称（正式名称）の形式から Hint を返す', () => {
+      const finder = new AliasInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: 'HTTP（HyperText Transfer Protocol）は通信プロトコルです',
@@ -58,6 +60,7 @@ describe('AliasInParenthesesFinder', () => {
     })
 
     it('正式名称（略称）の形式でも略称を name にする', () => {
+      const finder = new AliasInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: 'Cross-Origin Resource Sharing（CORS）は仕組みです',
@@ -72,6 +75,7 @@ describe('AliasInParenthesesFinder', () => {
 
   describe('find - 非マッチ', () => {
     it('日本語（日本語）のパターンにはマッチしない', () => {
+      const finder = new AliasInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: '共有メモリ（データをコピーする必要がないので高速）を使って通信する',
@@ -82,6 +86,7 @@ describe('AliasInParenthesesFinder', () => {
     })
 
     it('テキストが空の場合は空配列を返す', () => {
+      const finder = new AliasInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: '',
@@ -91,6 +96,7 @@ describe('AliasInParenthesesFinder', () => {
     })
 
     it('複数のパターンを検出する', () => {
+      const finder = new AliasInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: '認証（Authentication）と認可（Authorization）は異なる概念です',

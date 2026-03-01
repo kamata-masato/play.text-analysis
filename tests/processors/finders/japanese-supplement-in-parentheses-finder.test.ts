@@ -2,11 +2,10 @@ import { describe, expect, it } from 'vitest'
 import type { Note } from '../../../sources/models/note.js'
 import JapaneseSupplementInParenthesesFinder from '../../../sources/processors/finders/japanese-supplement-in-parentheses-finder.js'
 
-const finder = new JapaneseSupplementInParenthesesFinder()
-
 describe('JapaneseSupplementInParenthesesFinder', () => {
   describe('find', () => {
     it('日本語（日本語補足）のパターンから Hint を返す', () => {
+      const finder = new JapaneseSupplementInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: '共有メモリ（データをコピーする必要がないので高速）を使って通信する',
@@ -19,6 +18,7 @@ describe('JapaneseSupplementInParenthesesFinder', () => {
     })
 
     it('半角括弧でもマッチする', () => {
+      const finder = new JapaneseSupplementInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: '共有メモリ(高速な通信手段)を利用する',
@@ -30,6 +30,7 @@ describe('JapaneseSupplementInParenthesesFinder', () => {
     })
 
     it('日英ペアにはマッチしない', () => {
+      const finder = new JapaneseSupplementInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: '認証（Authentication）はユーザーの身元を確認する',
@@ -39,6 +40,7 @@ describe('JapaneseSupplementInParenthesesFinder', () => {
     })
 
     it('略称展開にはマッチしない', () => {
+      const finder = new JapaneseSupplementInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: 'HTTP（HyperText Transfer Protocol）は通信プロトコルです',
@@ -48,6 +50,7 @@ describe('JapaneseSupplementInParenthesesFinder', () => {
     })
 
     it('span と line を正しく設定する', () => {
+      const finder = new JapaneseSupplementInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: '共有メモリ（高速）を使う',
@@ -60,6 +63,7 @@ describe('JapaneseSupplementInParenthesesFinder', () => {
     })
 
     it('テキストが空の場合は空配列を返す', () => {
+      const finder = new JapaneseSupplementInParenthesesFinder()
       const note: Note = {
         source: 'inline.md',
         text: '',

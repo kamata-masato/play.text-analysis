@@ -42,4 +42,31 @@ describe('resolve', () => {
     expect(resolve(note, 9)).toBe(1)
     expect(resolve(note, 10)).toBe(2)
   })
+
+  it('最後の Origin を大きく超えるオフセットでも最後の行番号を返す', () => {
+    const note: Note = {
+      source: 'inline.md',
+      text: '',
+      origins: [
+        { offset: 0, line: 1 },
+        { offset: 10, line: 5 },
+      ],
+    }
+    expect(resolve(note, 1000)).toBe(5)
+  })
+
+  it('Origins のオフセット間にギャップがある場合でも正しく解決する', () => {
+    const note: Note = {
+      source: 'inline.md',
+      text: '',
+      origins: [
+        { offset: 0, line: 1 },
+        { offset: 50, line: 10 },
+        { offset: 200, line: 30 },
+      ],
+    }
+    expect(resolve(note, 25)).toBe(1)
+    expect(resolve(note, 100)).toBe(10)
+    expect(resolve(note, 300)).toBe(30)
+  })
 })

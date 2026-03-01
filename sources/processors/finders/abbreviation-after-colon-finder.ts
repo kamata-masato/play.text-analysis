@@ -12,8 +12,7 @@ const PATTERN =
 /**
  * コロン区切りの略称展開から用語候補を検出する Finder
  *
- * Note の text を走査し、「略称: 正式名称」のパターンにマッチする箇所を Hint として返す
- * 左側が英大文字略称、右側が英語の正式名称の組み合わせのみを対象とする
+ * 「X<colon>Y」の形式で X が英大文字略称、Y が英語の正式名称のパターンを検出する
  */
 class AbbreviationAfterColonFinder implements Finder {
   /**

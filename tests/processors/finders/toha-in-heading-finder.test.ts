@@ -2,11 +2,10 @@ import { describe, expect, it } from 'vitest'
 import type { Note } from '../../../sources/models/note.js'
 import TohaInHeadingFinder from '../../../sources/processors/finders/toha-in-heading-finder.js'
 
-const finder = new TohaInHeadingFinder()
-
 describe('TohaInHeadingFinder', () => {
   describe('find', () => {
     it('見出しの「Xとは」パターンから Hint を返す', () => {
+      const finder = new TohaInHeadingFinder()
       const note: Note = {
         source: 'inline.md',
         text: 'コアダンプとは、プロセスが異常終了したときにメモリの内容をファイルに保存したものです',
@@ -21,6 +20,7 @@ describe('TohaInHeadingFinder', () => {
     })
 
     it('headings が undefined の場合は空配列を返す', () => {
+      const finder = new TohaInHeadingFinder()
       const note: Note = {
         source: 'inline.md',
         text: '冒頭テキスト',
@@ -30,6 +30,7 @@ describe('TohaInHeadingFinder', () => {
     })
 
     it('末尾の見出しのみを対象とする', () => {
+      const finder = new TohaInHeadingFinder()
       const note: Note = {
         source: 'inline.md',
         text: '本文テキスト',
@@ -44,6 +45,7 @@ describe('TohaInHeadingFinder', () => {
     })
 
     it('「Xとは？」のように疑問符が付くケースにマッチする', () => {
+      const finder = new TohaInHeadingFinder()
       const note: Note = {
         source: 'inline.md',
         text: '説明テキスト',
@@ -56,6 +58,7 @@ describe('TohaInHeadingFinder', () => {
     })
 
     it('全角疑問符にもマッチする', () => {
+      const finder = new TohaInHeadingFinder()
       const note: Note = {
         source: 'inline.md',
         text: '説明テキスト',
@@ -68,6 +71,7 @@ describe('TohaInHeadingFinder', () => {
     })
 
     it('本文が空の場合は description を省略する', () => {
+      const finder = new TohaInHeadingFinder()
       const note: Note = {
         source: 'inline.md',
         text: '',
@@ -80,7 +84,19 @@ describe('TohaInHeadingFinder', () => {
       expect(hints[0]?.description).toBeUndefined()
     })
 
+    it('headings が空配列の場合は空配列を返す', () => {
+      const finder = new TohaInHeadingFinder()
+      const note: Note = {
+        source: 'inline.md',
+        text: '冒頭テキスト',
+        origins: [{ offset: 0, line: 1 }],
+        headings: [],
+      }
+      expect(finder.find(note)).toHaveLength(0)
+    })
+
     it('「とは」を含まない見出しにはマッチしない', () => {
+      const finder = new TohaInHeadingFinder()
       const note: Note = {
         source: 'inline.md',
         text: '本文テキスト',
@@ -91,6 +107,7 @@ describe('TohaInHeadingFinder', () => {
     })
 
     it('span を設定しない', () => {
+      const finder = new TohaInHeadingFinder()
       const note: Note = {
         source: 'inline.md',
         text: '本文テキスト',
