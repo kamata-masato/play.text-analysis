@@ -1,4 +1,4 @@
-# my.glossa
+# play.text-analysis
 
 ## 概要
 
